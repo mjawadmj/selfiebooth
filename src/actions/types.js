@@ -1,0 +1,1 @@
+export const SAVE_NAME ='save_name';
