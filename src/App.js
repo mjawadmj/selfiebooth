@@ -4,7 +4,8 @@ import './App.css';
 import AppRouter from './config/AppRouter';
 import {Provider} from 'react-redux';
 import reducers from './reducers';
-import {createStore} from 'redux';
+import {createStore,applyMiddleware} from 'redux';
+import ReduxThunk from 'redux-thunk';
 class App extends Component {
   
   constructor(props){
@@ -14,7 +15,7 @@ class App extends Component {
   
   render() {
     return (
-      <Provider store={createStore(reducers)}>
+      <Provider store={createStore(reducers,{},applyMiddleware(ReduxThunk))}>
         <AppRouter/>
       </Provider>
     );

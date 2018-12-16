@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
+import {Header} from '../components/common/Header'
 class Dashboard extends Component {
   
   constructor(props){

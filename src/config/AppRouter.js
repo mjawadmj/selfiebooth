@@ -2,27 +2,19 @@ import React from "react";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import Dashboard from '../components/Dashboard';
 import HomePage from '../components/HomePage';
+import {Header} from '../components/common/Header'
+import {Footer} from '../components/common/footer'
 
 const AppRouter = () => (
     <Router>
       <div>
-        <nav>
-          <ul>
-            <li>
-              <Link to="">Home</Link>
-            </li>
-            <li>
-              <Link to="/dashboard">Dashboard</Link>
-            </li>
-          </ul>
-        </nav>
+        <Header/>
+
   
         <Route path="" exact component={HomePage} />
         <Route path="/dashboard" component={Dashboard} />
-        <footer>
-          <p>Hello from selfie booth</p>
-        </footer>
-      </div>
+        <Footer/>
+         </div>
     </Router>
   );
   
