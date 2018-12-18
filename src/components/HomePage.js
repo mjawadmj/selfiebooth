@@ -45,7 +45,6 @@ class HomePage extends Component {
   componentWillReceiveProps(props){
 	if(props.user !== null && this.props.user !==  props.user){
 		$('#myModal').modal('hide');
-		this.props.history.push('dashboard');
 	}
   }
    validateEmail(email) {

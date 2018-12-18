@@ -3,9 +3,10 @@ import logo from './logo.svg';
 import './App.css';
 import AppRouter from './config/AppRouter';
 import {Provider} from 'react-redux';
-import reducers from './reducers';
+import {store,persistor} from './config/Store';
+import { PersistGate } from 'redux-persist/integration/react'
 import {createStore,applyMiddleware} from 'redux';
-import ReduxThunk from 'redux-thunk';
+
 class App extends Component {
   
   constructor(props){
@@ -15,8 +16,10 @@ class App extends Component {
   
   render() {
     return (
-      <Provider store={createStore(reducers,{},applyMiddleware(ReduxThunk))}>
+      <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
         <AppRouter/>
+      </PersistGate>
       </Provider>
     );
   }

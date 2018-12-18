@@ -3,7 +3,7 @@ import logo from '../../assets/img/logo.png';
 import background1 from '../../assets/img/background1.jpg'
 import altLogo from '../../assets/img/logo-alt.png';
 import { HashLink as Link } from 'react-router-hash-link';
-export const Header =(user,onSignOut)=>{
+export const Header =({user,onSignOut})=>{
     return(
         		<header>
     

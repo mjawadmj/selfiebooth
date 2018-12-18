@@ -12,7 +12,7 @@ export const HeaderHome =({user,onSignOut})=>{
 			<div className="overlay"></div>
 		</div>
 		<nav id="nav" className="navbar nav-transparent">
-			<div className="container" >
+			<div className="container" style={{maxHeight:'142px !important'}}>
 
 				<div className="navbar-header">
 					<div className="navbar-brand">
