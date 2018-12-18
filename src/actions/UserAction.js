@@ -1,4 +1,4 @@
-import {SAVE_NAME,EMAIL_INPUT, PASS_CHANGE, ONLOADSTART, LOGIN_SUCCESS, LOGIN_FAILURE} from './types';
+import {SAVE_NAME,EMAIL_INPUT, PASS_CHANGE, ONLOADSTART, LOGIN_SUCCESS, LOGIN_FAILURE, SIGN_OUT} from './types';
 import {fire} from '../config/Global';
 export const onEmailInput=(email)=>{
     return{
@@ -25,19 +25,34 @@ export const onLogin=(email,password)=>{
         })},3000);
         }
 }
-export const successLogin=(dispatch,firebaseUser)=>{
+const successLogin=(dispatch,firebaseUser)=>{
     dispatch({
         type: LOGIN_SUCCESS,
         payload: firebaseUser.user
     })
 
 }
-export const failLogin=(dispatch,error)=>{
+const failLogin=(dispatch,error)=>{
     dispatch({
         type: LOGIN_FAILURE,
         payload: error
     })
 
+}
+export const onSignOut=()=>{
+    return(dispatch)=>{
+        fire.auth().signOut().then(function() {
+            console.log('Signed Out')
+            successSignOut(dispatch)
+          }, function(error) {
+            console.error('Sign Out Error', error);
+          });
+    }
+} 
+const successSignOut =(dispatch)=>{
+    dispatch({
+        type:SIGN_OUT
+    })
 }
 
 

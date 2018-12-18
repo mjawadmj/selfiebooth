@@ -1,4 +1,4 @@
-import {SAVE_NAME, EMAIL_INPUT, PASS_CHANGE, ONLOADSTART, ON_LOGIN, LOGIN_SUCCESS, LOGIN_FAILURE} from '../actions/types';
+import {SAVE_NAME, EMAIL_INPUT, PASS_CHANGE, ONLOADSTART, ON_LOGIN, LOGIN_SUCCESS, LOGIN_FAILURE, SIGN_OUT} from '../actions/types';
 
 const Initial_State ={
     name: null,
@@ -17,11 +17,13 @@ export default (state = Initial_State, action) => {
         case PASS_CHANGE:
             return{...state,password:action.payload};
         case ONLOADSTART:
-            return{...state,loading:true}
+            return{...state,loading:true,error:null}
         case LOGIN_SUCCESS:
             return{...state,loading:false,user:action.payload}
         case LOGIN_FAILURE:
-            return{...state,loading:false,error:action.payload}
+            return{...Initial_State,error:action.payload}
+        case SIGN_OUT:
+            return{...Initial_State}
         default:
             return state;
     }

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
-import {onEmailInput,onPassChange,onLogin} from '../actions'
-import { Header } from './common/Header';
+import {onEmailInput,onPassChange,onLogin,onSignOut} from '../actions'
+import { HeaderHome } from './common/HeaderHome';
+import {Footer} from './common/footer'
 import Loader from  '../assets/img/loader.gif'
 import about1 from '../assets/img/about1.jpg'
 import about2 from '../assets/img/about2.jpg'
@@ -11,26 +12,76 @@ import team2 from '../assets/img/team2.jpg'
 import team3 from '../assets/img/team3.jpg'
 import team4 from '../assets/img/team4.jpg'
 
+import $ from 'jquery/src/jquery';
+import 'owl.carousel/dist/assets/owl.carousel.css';
+import 'owl.carousel';
+
+
 class HomePage extends Component {
   
   constructor(props){
     super(props);    
     this.state={
 		modal:'login',
-		visible:false
+
 		
-    }
+	}
+	$(document).ready(function(){
+		$("#preloader").delay(600).fadeOut();
+			
+		$('#about-slider').owlCarousel({
+		items:1,
+		loop:true,
+		margin:15,
+		nav: true,
+		navText : ['<i class="fa fa-angle-left"></i>','<i class="fa fa-angle-right"></i>'],
+		dots : true,
+		autoplay : true,
+		animateOut: 'fadeOut'
+	});
+		$("#nav .main-nav a[href^='#']").on('click', function(e) {
+			e.preventDefault();
+			var hash = this.hash;
+			$('html, body').animate({
+				scrollTop: $(this.hash).offset().top
+			}, 600);
+		});
+		$('body').scrollspy({
+			target: '#nav',
+			offset: $(window).height() / 2
+		});
+		$('#back-to-top').on('click', function(){
+			$('body,html').animate({
+				scrollTop: 0
+			}, 600);
+		});
+	
+		$('#nav .nav-collapse').on('click', function() {
+			$('#nav').toggleClass('open');
+		});
+	
+		$('.has-dropdown a').on('click', function() {
+			$(this).parent().toggleClass('open-drop');
+		});
+
+		window.addEventListener('scroll',function() {
+			var wScroll = $(this).scrollTop();
+	
+
+			wScroll > 1 ? $('#nav').addClass('fixed-nav') : $('#nav').removeClass('fixed-nav');
+	
+			wScroll > 700 ? $('#back-to-top').fadeIn() : $('#back-to-top').fadeOut();
+		});
+	  })
+	
   }
   componentWillMount(){
-		if(this.props.user !== null){
-			this.setState({visible:false})
-			this.props.history.push('dashboard');
-		}
+	  	
   }
+
   componentWillReceiveProps(props){
-	  console.log()
-	if(props.user !== null){
-		this.setState({visible:false})
+	if(props.user !== null && this.props.user !==  props.user){
+		$('#myModal').modal('hide');
 		this.props.history.push('dashboard');
 	}
   }
@@ -39,6 +90,21 @@ class HomePage extends Component {
 
     	return re.test(String(email).toLowerCase());
 	}
+	verifyPassword(event){
+		
+		if(this.props.password=== event.target.value && event.target.value !== null){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+  onRegisterValidation(){
+	if(this.props.password && this.validateEmail(this.props.email) && this.verifyPassword){
+		return false;
+	}
+	return true;
+  }
   onLoginValidate(){
 	  
 	  if(this.props.password && this.validateEmail(this.props.email)){
@@ -55,11 +121,12 @@ class HomePage extends Component {
 	this.props.onPassChange(event.target.value);
   }
   onLogin(){
-	  this.setState({visible:true})
 	this.props.onLogin(this.props.email,this.props.password);
+
 	
   }
   renderModalContent(){
+	
 	if(this.props.loading){
 		return(
 			<div class="modal-body">
@@ -83,6 +150,7 @@ class HomePage extends Component {
 			</div>
 			<div className="col-md-4">
 				<button style={{margin:15,marginBottom:5}}
+				id="inputButtonClick"
 				 disabled={this.onLoginValidate()}
 				 onClick={this.onLogin.bind(this)}
 				 style={{opacity:this.onLoginValidate()?"0.5":"",margin:15,marginBottom:5}}
@@ -97,19 +165,27 @@ class HomePage extends Component {
 		  return(
 			<div >
 				
-			<label for="emailInput">Email</label>
-			<input type="email" id="emailInput" className="input" placeholder="Email"
-			onChange={this.handleEmailChange.bind(this)}/> 
+			<label htmlFor="emailInput">Email</label>
+			<input type="email" id="emailInput" class="input" placeholder="Email"
+				onChange={this.handleEmailChange.bind(this)}
+			/> 
 			<label for="passInput">Password</label>
-			<input type="password" id="passInput" className="input" placeholder="Password"/> 
+			<input type="password" id="passInput" class="input" placeholder="Password"
+			onChange={ this.handlePasswordChange.bind(this)}/> 
 			<label for="confirmPassInput">Confirm Password</label>
-			<input type="password" id="confirmPassInput" className="input" placeholder="Password"/> 
+			<input type="password" id="confirmPassInput" className="input" placeholder="Password"
+			onChange={this.verifyPassword.bind(this)}/> 
 			<div className="row">
 			<div className="col-md-8">
 				<p style={{marginTop: 30,cursor:'pointer'}}>Already Have An Account? <a onClick={()=>{this.setState({modal:'login'})}}>Login Now!</a></p>
 			</div>
 			<div className="col-md-4">
-				<button style={{margin:15,marginBottom:5}} className="main-btn pull-right">Register</button>
+				<button style={{margin:15,marginBottom:5}} 
+				className="main-btn pull-right"
+				disabled={this.onRegisterValidation()}
+				 
+				 style={{opacity:this.onRegisterValidation()?"0.5":"",margin:15,marginBottom:5}}
+				>Register</button>
 			</div>
 			</div>
 		  </div>
@@ -120,6 +196,10 @@ class HomePage extends Component {
   render() {
     return (
       <div>
+		  <HeaderHome
+		  user={this.props.user!==null?true:false}
+		  onSignOut ={this.props.onSignOut.bind(this)}
+		  />
 	<div id="service" class="section md-padding"/>
 
 	
@@ -564,6 +644,16 @@ class HomePage extends Component {
 
   </div>
 </div>
+<Footer/>
+<div id="back-to-top"></div>
+	<div id="preloader">
+		<div class="preloader">
+			<span></span>
+			<span></span>
+			<span></span>
+			<span></span>
+		</div>
+	</div>
 </div>
     );
   }
@@ -578,4 +668,4 @@ const mapStateToProps =(state)=>{
 		error:state.user.error
 	}
 }
-export default connect(mapStateToProps,{onEmailInput,onPassChange,onLogin})(HomePage);
+export default connect(mapStateToProps,{onEmailInput,onPassChange,onLogin,onSignOut})(HomePage);
