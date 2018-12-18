@@ -12,7 +12,7 @@ export const HeaderHome =({user,onSignOut})=>{
 			<div className="overlay"></div>
 		</div>
 		<nav id="nav" className="navbar nav-transparent">
-			<div className="container">
+			<div className="container" >
 
 				<div className="navbar-header">
 					<div className="navbar-brand">
@@ -28,7 +28,6 @@ export const HeaderHome =({user,onSignOut})=>{
 
 				<ul className="main-nav nav navbar-nav navbar-right">
 					<li><Link to="#home">Home</Link></li>
-					{user &&<li><Link to="/dashboard">dashboard</Link></li>}
 					<li><a href="#service">Services</a></li>
 					<li><a href="#features">About</a></li>
 					<li><a href="#pricing">Prices</a></li>
@@ -36,11 +35,20 @@ export const HeaderHome =({user,onSignOut})=>{
 					
 					<li><a href="#contact">Contact</a></li>
 					{!user && <li><a data-toggle="modal" data-target="#myModal">Login</a></li>}
-					{user && <li><a 
-					onClick={onSignOut}
-					>Sign Out</a></li>}
 					
-					</ul>
+					{user && 
+					<li class="has-dropdown"><a>Account</a>
+						<ul class="dropdown">
+							<li><Link 
+							to="/dashboard"
+							>Dashboard</Link></li>
+							<li><a
+							onClick={onSignOut}
+							>Sign Out</a></li>	
+						</ul>
+					</li>}
+				</ul>
+					
 
 			</div>
 		</nav>

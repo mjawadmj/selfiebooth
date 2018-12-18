@@ -8,7 +8,7 @@ export const Header =(user,onSignOut)=>{
         		<header>
     
         	<nav id="nav" class="navbar">
-        		<div class="container">
+        		<div class="container" >
     
         			<div class="navbar-header">
     

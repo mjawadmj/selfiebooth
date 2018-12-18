@@ -1,4 +1,4 @@
-import {SAVE_NAME,EMAIL_INPUT, PASS_CHANGE, ONLOADSTART, LOGIN_SUCCESS, LOGIN_FAILURE, SIGN_OUT} from './types';
+import {SAVE_NAME,EMAIL_INPUT, PASS_CHANGE, ONLOADSTART, LOGIN_SUCCESS, LOGIN_FAILURE, SIGN_OUT, EMPTY_FORM, RETRIEVE_IMAGES} from './types';
 import {fire} from '../config/Global';
 export const onEmailInput=(email)=>{
     return{
@@ -22,7 +22,7 @@ export const onLogin=(email,password)=>{
         })
         .catch(function(error) {
             failLogin(dispatch,error)
-        })},3000);
+        })},2000);
         }
 }
 const successLogin=(dispatch,firebaseUser)=>{
@@ -55,5 +55,37 @@ const successSignOut =(dispatch)=>{
     })
 }
 
+export const emptyForm=()=>{
+    return{
+        type: EMPTY_FORM
+    }
+}
+
+export const onRegister=(email,password)=>{
+    return(dispatch)=>{
+        dispatch({type: ONLOADSTART});
+        setTimeout(()=>{
+        fire.auth().createUserWithEmailAndPassword(email, password)
+        .then(function(firebaseUser) {
+            successLogin(dispatch,firebaseUser)
+        })
+        .catch(function(error) {
+            failLogin(dispatch,error)
+        })},2000);
+    }
+}
+export const onRetrieveImages=(uid)=>{
+    return(dispatch)=>{
+        fire.database().ref('Images/').child(uid).on('value', 
+        function (snapshot) {
+            if(snapshot.val()){
+                dispatch({
+                    type:RETRIEVE_IMAGES,
+                    payload:snapshot.val()
+                })
+            }
+        })
+    }
+}
 
 

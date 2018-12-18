@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
-import {onEmailInput,onPassChange,onLogin,onSignOut} from '../actions'
+import {onEmailInput,onPassChange,onLogin,onSignOut,emptyForm,onRegister} from '../actions'
 import { HeaderHome } from './common/HeaderHome';
 import {Footer} from './common/footer'
 import Loader from  '../assets/img/loader.gif'
@@ -23,14 +23,23 @@ class HomePage extends Component {
     super(props);    
     this.state={
 		modal:'login',
-
-		
+		password: '',
+		conPass:''
 	}
-	
+
 	
   }
   componentWillMount(){
-	  	
+	$(document).ready(function(){
+		$("#preloader").delay(600).fadeOut();
+		$('#nav .nav-collapse').on('click', function() {
+			$('#nav').toggleClass('open');
+		});
+	
+		$('.has-dropdown a').on('click', function() {
+			$(this).parent().toggleClass('open-drop');
+		});
+	})	
   }
 
   componentWillReceiveProps(props){
@@ -44,25 +53,13 @@ class HomePage extends Component {
 
     	return re.test(String(email).toLowerCase());
 	}
-	verifyPassword(event){
-		
-		if(this.props.password=== event.target.value && event.target.value !== null){
-			return true;
-		}
-		else{
-			return false;
-		}
-	}
-  onRegisterValidation(){
-	if(this.props.password && this.validateEmail(this.props.email) && this.verifyPassword){
-		return false;
-	}
-	return true;
-  }
+  
+
   onLoginValidate(){
 	  
-	  if(this.props.password && this.validateEmail(this.props.email)){
-		  return false;
+	  if(this.props.password !=='' && this.validateEmail(this.props.email)){
+		  
+		return false;
 	  }
 	  return true;
   }
@@ -70,14 +67,28 @@ class HomePage extends Component {
 	this.props.onEmailInput(event.target.value);
 	
   }
+  onRegister(){
+	  this.props.emptyForm();
+	  this.setState({
+		  modal:'register'
+	  })
+  }
+  onRegisterToLogin(){
+	  this.props.emptyForm(null,()=>{});
+	  this.setState({
+		modal:'login',
+		  password:null,
+		  conPass:null
+	  })
+  }
   handlePasswordChange(event){
-	console.log(event.target.value)
 	this.props.onPassChange(event.target.value);
   }
   onLogin(){
 	this.props.onLogin(this.props.email,this.props.password);
-
-	
+  }
+  register(){
+	this.props.onRegister(this.props.email,this.state.conPass)
   }
   renderModalContent(){
 	
@@ -93,14 +104,16 @@ class HomePage extends Component {
 			<div >
 			<label htmlFor="emailInput">Email</label>
 			<input type="email" id="emailInput" class="input" placeholder="Email"
+				value={this.props.email}
 				onChange={this.handleEmailChange.bind(this)}
 			/> 
 			<label for="passInput">Password</label>
 			<input type="password" id="passInput" class="input" placeholder="Password"
+			value={this.props.password}
 			onChange={ this.handlePasswordChange.bind(this)}/> 
 			<div className="row">
 			<div className="col-md-8">
-				<p style={{marginTop: 30,cursor:'pointer'}}>Don't Have An Account? <a onClick={()=>{this.setState({modal:'register'})}}>Register Now!</a></p>
+				<p style={{marginTop: 30,cursor:'pointer'}}>Don't Have An Account? <a onClick={this.onRegister.bind(this)}>Register Now!</a></p>
 			</div>
 			<div className="col-md-4">
 				<button style={{margin:15,marginBottom:5}}
@@ -121,24 +134,27 @@ class HomePage extends Component {
 				
 			<label htmlFor="emailInput">Email</label>
 			<input type="email" id="emailInput" class="input" placeholder="Email"
+				value={this.props.email}
 				onChange={this.handleEmailChange.bind(this)}
 			/> 
 			<label for="passInput">Password</label>
 			<input type="password" id="passInput" class="input" placeholder="Password"
-			onChange={ this.handlePasswordChange.bind(this)}/> 
+			value={this.state.password}
+			onChange={ (event)=>{this.setState({password:event.target.value})}}/> 
 			<label for="confirmPassInput">Confirm Password</label>
 			<input type="password" id="confirmPassInput" className="input" placeholder="Password"
-			onChange={this.verifyPassword.bind(this)}/> 
+			value={this.state.conPass}
+			onChange={(event)=>{this.setState({conPass:event.target.value})}}/> 
 			<div className="row">
 			<div className="col-md-8">
-				<p style={{marginTop: 30,cursor:'pointer'}}>Already Have An Account? <a onClick={()=>{this.setState({modal:'login'})}}>Login Now!</a></p>
+				<p style={{marginTop: 30,cursor:'pointer'}}>Already Have An Account? <a onClick={this.onRegisterToLogin.bind(this)}>Login Now!</a></p>
 			</div>
 			<div className="col-md-4">
 				<button style={{margin:15,marginBottom:5}} 
 				className="main-btn pull-right"
-				disabled={this.onRegisterValidation()}
-				 
-				 style={{opacity:this.onRegisterValidation()?"0.5":"",margin:15,marginBottom:5}}
+				disabled={this.state.conPass === this.state.password && this.state.password !==''&&this.validateEmail(this.props.email)?false:true}
+				style={{opacity:this.state.conPass === this.state.password && this.state.password!=='' &&this.validateEmail(this.props.email)?"":"0.5",margin:15,marginBottom:5}}
+				onClick={this.register.bind(this)}
 				>Register</button>
 			</div>
 			</div>
@@ -619,4 +635,4 @@ const mapStateToProps =(state)=>{
 		error:state.user.error
 	}
 }
-export default connect(mapStateToProps,{onEmailInput,onPassChange,onLogin,onSignOut})(HomePage);
+export default connect(mapStateToProps,{onEmailInput,onPassChange,onLogin,onSignOut,emptyForm,onRegister})(HomePage);

@@ -3,7 +3,7 @@ import 'owl.carousel/dist/assets/owl.carousel.css';
 import 'owl.carousel';
 
 $(document).ready(function(){
-	$("#preloader").delay(600).fadeOut();
+	
 		
 	$('#about-slider').owlCarousel({
 	items:1,
@@ -32,13 +32,7 @@ $(document).ready(function(){
 		}, 600);
 	});
 
-	$('#nav .nav-collapse').on('click', function() {
-		$('#nav').toggleClass('open');
-	});
-
-	$('.has-dropdown a').on('click', function() {
-		$(this).parent().toggleClass('open-drop');
-	});
+	
 
 	window.addEventListener('scroll',function() {
 		var wScroll = $(this).scrollTop();
