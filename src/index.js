@@ -8,6 +8,8 @@ import * as serviceWorker from './serviceWorker';
 import 'owl.carousel';
 import 'jquery/src/jquery';
 import '../node_modules/bootstrap/dist/js/bootstrap';
+import './assets/css/style.css'
+import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 ReactDOM.render(<App />, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
